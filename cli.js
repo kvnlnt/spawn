@@ -15,18 +15,23 @@ class CLI {
             desc: desc,
             arguments: [],
             examples: [],
-            callback: null
+            callback: null,
+            defaults: []
         };
         this.commands.push(newCommand);
         this.lastCommand = newCommand;
         return this;
     }
-    argument(arg, abbr, def, desc) {
+    argument(arg, abbr = null, desc = '', def = null) {
         this.lastCommand.arguments.push({
             name: arg,
             abbr: abbr,
             def: def,
             desc: desc
+        });
+        if (def) this.lastCommand.defaults.push({
+            arg: arg,
+            def: def
         });
         return this;
     }
@@ -84,8 +89,12 @@ class CLI {
         let args = this.extractArguments(argv);
         let cmdString = this.extractCommand(argv);
         let cmd = this.commands.filter(i => i.name === cmdString);
-        if (cmd) cmd[0].callback(args);
+        if (cmd.length) {
+            if (cmd[0].defaults.length) cmd[0].defaults.forEach(i => {
+                if (!args.hasOwnProperty(i.arg)) args[i.arg] = i.def;
+            });
+            cmd[0].callback(args);
+        }
     }
 }
-
 module.exports = (new CLI());
