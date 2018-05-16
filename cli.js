@@ -13,7 +13,8 @@ const MODE = {
 // PROTOTYPES
 const prototypes = {
     argument: {
-        abbr: ''
+        abbr: null,
+        desc: null
     },
     command: {
         arguments: {},
@@ -25,18 +26,18 @@ const prototypes = {
 const lib = {
     arg: (arg, abbr, desc, state) => {
         state.mode = MODE.ARGUMENT;
-        state.lastCommand.arguments[arg] = Object.assign({
+        state.lastCommand.arguments[arg] = Object.assign({}, prototypes.argument, {
             abbr: abbr,
             desc: desc
-        }, prototypes.argument);
+        });
         state.lastArgument = state.lastCommand.arguments[arg];
         return state;
     },
     cmd: (cmd, desc, state) => {
         state.mode = MODE.COMMAND;
-        state.commands[cmd] = Object.assign({
+        state.commands[cmd] = Object.assign({}, prototypes.command, {
             desc: desc
-        }, prototypes.command);
+        });
         state.lastCommand = state.commands[cmd];
         return state;
     },
@@ -74,25 +75,22 @@ const lib = {
         // console.log(state);
         console.log(state.header);
         console.log();
-        console.log(chalk.bold("COMMANDS"));
-        console.log();
-        Object.keys(state.commands).forEach(i => {
-            console.log(' ', i, chalk.grey(state.commands[i].desc));
-        });
-        console.log();
-        console.log(chalk.bold("GUIDE"));
+        console.log(chalk.bold("USAGE"));
         console.log();
         Object.keys(state.commands).forEach(i => {
             console.log(' ', i, );
             console.log(' ', chalk.grey(state.commands[i].desc));
-            console.log()
-            Object.keys(state.commands[i].arguments).map(j => {
-                return '--' + j + ',-' + state.commands[i].arguments[j].abbr
-            }).forEach(i => {
-                console.log('   ', i);
+            console.log();
+            Object.keys(state.commands[i].arguments).forEach(j => {
+                console.log(`    --${j},-${state.commands[i].arguments[j].abbr}`, chalk.grey(state.commands[i].arguments[j].desc));
             });
             console.log();
+            Object.keys(state.commands[i].examples).forEach(j => {
+                console.log(chalk.grey(`    // ${state.commands[i].examples[j]}`));
+                console.log(`    ${j}`);
+            });
         });
+
     }
 };
 
@@ -113,24 +111,14 @@ const C = (function (state = {
     this.I = (argv = process.argv) => {
         let args = lib.extractArguments(argv);
         let cmd = lib.extractCommand(argv);
-        if (!cmd) return lib.help(this.state);
+        if (!cmd || !this.state.commands[cmd]) return lib.help(this.state);
         this.state.commands[cmd].cb(args);
     };
-    this.CMND = lib.cmd;
-    this.CALL = lib.cb;
+    this.COMM = lib.cmd;
     this.ARGU = lib.arg;
+    this.CALL = lib.cb;
     this.EXPL = lib.example;
     return this;
 })();
 
-C
-    .L(C.CMND, "basic", "Basic Example")
-    .L(C.ARGU, "test", "t", "test arg")
-    .L(C.ARGU, "test2", "x", "test arg")
-    .L(C.CALL, res => console.log('basic', res))
-    .L(C.EXPL, "basic -t=testing", "Runs bunk test")
-    .L(C.CMND, "basic2-with-is-really-long", "Basic Example 2")
-    .L(C.CALL, res => console.Log('basic2', res))
-    .L(C.ARGU, "test", "t", "test arg")
-    .L(C.EXPL, "basic2 -t=testing", "Runs bunk test")
-    .I()
+module.exports = C;
