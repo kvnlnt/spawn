@@ -105,7 +105,7 @@ class CLI {
         const that = this;
         let readline = require('readline');
         let rl = readline.createInterface(process.stdin, process.stdout);
-        let prefix = '>> ';
+        let prefix = '$ ';
         rl.setPrompt(prefix, prefix.length);
         rl.on('line', processLine);
         rl.on('close', close);
