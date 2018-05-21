@@ -17,6 +17,7 @@ class CLI {
             desc: desc
         });
         if (def) this.lastCommand.defaults[arg] = def;
+        if (def) this.lastCommand.defaults[abbr] = def;
         return this;
     }
     command(cmd, desc) {
@@ -81,6 +82,7 @@ class CLI {
             }
             if (i.examples.length) {
                 i.examples.forEach(j => {
+                    console.log();
                     if (j.desc) console.log(chalk.grey(`  // ${j.desc}`));
                     console.log(`  ${j.example}`);
                 });
@@ -91,17 +93,28 @@ class CLI {
     header(header) {
         this.header = header;
     }
+    mergeArguments(cmd, args) {
+        if (!cmd) return {};
+        if (Object.keys(cmd.defaults)) args = Object.assign(cmd.defaults, args);
+        args = cmd.arguments.reduce((acc, cur) => {
+            if (args.hasOwnProperty(cur.name) && cmd.defaults.hasOwnProperty(cur.name)) {
+                acc[cur.name] = args[cur.name];
+            }
+            if (args.hasOwnProperty(cur.abbr) && cmd.defaults.hasOwnProperty(cur.abbr)) {
+                acc[cur.name] = args[cur.abbr];
+            }
+            return acc;
+        }, {});
+        return args;
+    }
     start(argv = process.argv) {
         let args = this.extractArguments(argv);
         let cmd = this.extractCommand(argv);
-
-        // pipe mode
-        if (cmd) this.startPipeMode(cmd, args);
-
-        // interactive mode
-        if (!cmd && args.i) this.startInteractiveMode(cmd, args);
+        let mergedArguments = this.mergeArguments(cmd, args);
+        if (cmd) this.startPipeMode(cmd, mergedArguments);
+        if (!cmd && args.i) this.startInteractiveMode();
     }
-    startInteractiveMode(cmd, args) {
+    startInteractiveMode() {
         const that = this;
         let readline = require('readline');
         let rl = readline.createInterface(process.stdin, process.stdout);
@@ -118,9 +131,9 @@ class CLI {
             let argv = data.replace(/ +(?= )/g, '').split(' ').map(i => i.trim());
             let args = that.extractArguments(argv);
             let cmd = that.extractCommand(argv);
+            let mergedArguments = that.mergeArguments(cmd, args);
             if (!cmd) return;
-            if (Object.keys(cmd.defaults)) args = Object.assign(cmd.defaults, args);
-            cmd.callback(args);
+            cmd.callback(mergedArguments);
             rl.prompt();
         };
 
@@ -140,7 +153,6 @@ class CLI {
     }
     startPipeMode(cmd, args) {
         return this.extractPipe(pipe => {
-            if (Object.keys(cmd.defaults)) args = Object.assign(cmd.defaults, args);
             if (pipe) args.pipe = pipe;
             return cmd.callback(args);
         });

@@ -1,1 +1,0 @@
-module.exports = resp => console.log('goodbye', resp);
