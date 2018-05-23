@@ -2,17 +2,21 @@
   "name": "@kvnlnt/spawn-cli",
   "author": "@kvnlnt",
   "version": "1.0.0",
-  "title": "CLI",
+  "title": "Spawn CLI",
   "description": "The CLI for CLIs",
   "keywords": [
-    "cli"
+    "cli",
+    "command-line",
+    "command-line-tools",
+    "command-line-docs",
+    "command-line-args"
   ],
-  "main": "cli.js",
+  "main": "./bin/cli.js",
   "scripts": {
     "test": "jest"
   },
   "bin": {
-    "cli": "./bin/cli.js"
+    "spawn-cli": "./bin/cli.js"
   },
   "preferGlobal": true,
   "license": "MIT",
