@@ -93,25 +93,19 @@ class CLI {
     header(header) {
         this.header = header;
     }
-    mergeArguments(cmd, args) {
+    squashArguments(cmd, args) {
         if (!cmd) return {};
-        if (Object.keys(cmd.defaults)) args = Object.assign(cmd.defaults, args);
-        args = cmd.arguments.reduce((acc, cur) => {
-            if (args.hasOwnProperty(cur.name) && cmd.defaults.hasOwnProperty(cur.name)) {
-                acc[cur.name] = args[cur.name];
-            }
-            if (args.hasOwnProperty(cur.abbr) && cmd.defaults.hasOwnProperty(cur.abbr)) {
-                acc[cur.name] = args[cur.abbr];
-            }
+        let _args = cmd.arguments.reduce((acc, curr) => {
+            acc[curr.name] = args[curr.name] || args[curr.abbr] || curr.def;
             return acc;
         }, {});
-        return args;
+        console.log(_args);
+        return _args;
     }
     start(argv = process.argv) {
         let args = this.extractArguments(argv);
         let cmd = this.extractCommand(argv);
-        let mergedArguments = this.mergeArguments(cmd, args);
-        if (cmd) this.startPipeMode(cmd, mergedArguments);
+        if (cmd) this.startPipeMode(cmd, this.squashArguments(cmd, args));
         if (!cmd && args.i) this.startInteractiveMode();
     }
     startInteractiveMode() {
@@ -131,7 +125,7 @@ class CLI {
             let argv = data.replace(/ +(?= )/g, '').split(' ').map(i => i.trim());
             let args = that.extractArguments(argv);
             let cmd = that.extractCommand(argv);
-            let mergedArguments = that.mergeArguments(cmd, args);
+            let mergedArguments = that.squashArguments(cmd, args);
             if (!cmd) return;
             cmd.callback(mergedArguments);
             rl.prompt();
