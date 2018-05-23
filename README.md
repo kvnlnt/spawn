@@ -1,4 +1,4 @@
-# CLI
+# Spawn CLI
 The super simple cli lib I always wanted.
 
 ## Features
@@ -14,7 +14,7 @@ The super simple cli lib I always wanted.
 mycli.js
 
     // include lib
-    const cli = require("../bin/cli");
+    const cli = require("spawn-cli");
 
     // add a command with it's args
     cli
