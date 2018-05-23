@@ -1,4 +1,4 @@
-const cli = require("../cli");
+const cli = require("../bin/cli");
 
 // Hello
 cli

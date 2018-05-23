@@ -99,7 +99,6 @@ class CLI {
             acc[curr.name] = args[curr.name] || args[curr.abbr] || curr.def;
             return acc;
         }, {});
-        console.log(_args);
         return _args;
     }
     start(argv = process.argv) {

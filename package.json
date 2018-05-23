@@ -1,15 +1,26 @@
 {
   "name": "cli",
+  "author": "@kvnlnt",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "title": "CLI",
+  "description": "The CLI for CLIs",
+  "keywords": [
+    "cli"
+  ],
+  "main": "cli.js",
   "scripts": {
     "test": "jest"
   },
-  "author": "",
-  "license": "ISC",
+  "bin": {
+    "cli": "./bin/cli.js"
+  },
+  "preferGlobal": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kvnlnt/spawn-cli.git"
+  },
   "dependencies": {
-    "chalk": "^2.3.2",
-    "jest": "^22.4.3"
+    "chalk": "^2.3.2"
   }
 }
