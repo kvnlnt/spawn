@@ -69,7 +69,7 @@ class CLI {
         }
     }
     help() {
-        console.log(this._header);
+        console.log(this.header);
         console.log();
         this.commands.forEach(i => {
             console.log(chalk.bold(i.name));
