@@ -69,7 +69,7 @@ class CLI {
         }
     }
     help() {
-        console.log(this.header);
+        console.log(this._header);
         console.log();
         this.commands.forEach(i => {
             console.log(chalk.bold(i.name));
@@ -91,7 +91,8 @@ class CLI {
         });
     }
     header(header) {
-        this.header = header;
+        this._header = header;
+        return this;
     }
     squashArguments(cmd, args) {
         if (!cmd) return {};

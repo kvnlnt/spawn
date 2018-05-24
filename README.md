@@ -9,8 +9,11 @@ The super simple cli lib I always wanted.
 5. Argument defaults
 6. Simple, clean and get's out of your way
 
-## Usage
+## Quick Start
 
+[![asciicast](https://asciinema.org/a/26pbweEQmgqoNj1wqEYPYkuU4.png)](https://asciinema.org/a/26pbweEQmgqoNj1wqEYPYkuU4)
+
+### Basic
 mycli.js
 
     // include lib
@@ -32,7 +35,10 @@ Now set up your tool to be a cli with [npm link](https://docs.npmjs.com/cli/link
     $ mycli hello --name=You
     // result => Hello You
 
-## Interactive Mode
+### Interactive Mode
 You can pass the `-i` flag without a command and use your tool interactively, like this:
 
     $ mycli -i
+
+## Examples
+All examples are in the `./examples` folder.
