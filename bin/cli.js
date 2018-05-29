@@ -1,13 +1,14 @@
 const chalk = require("chalk");
-const header = chalk.blue(`
-█████ ██    ██
-██    ██    ██
-█████ █████ ██ `);
+const header = chalk.blue(`	
+    #### ##### ##### # # # ##  #
+  #### #####  ##### # # # # # #
+##### #      #   # ##### #  ##`);
 class CLI {
     constructor() {
         this.commands = [];
         this.lastCommand = null;
         this._header = header;
+        this._defaultCommand = null;
     }
     argument(arg, abbr = null, desc = '', def = null) {
         this.lastCommand.arguments.push({
@@ -54,10 +55,9 @@ class CLI {
             }, {});
     }
     extractCommand(argv) {
-        let cmd = argv
+        return argv
             .filter(i => i.charAt(0) !== '-' && i.indexOf('\\') === -1 && i.indexOf('\/') === -1)
             .pop();
-        return this.commands.find(i => i.name === cmd);
     }
     extractPipe(cb) {
         if (process.stdin.isTTY) {
@@ -68,7 +68,18 @@ class CLI {
             process.stdin.on("data", pipe => cb(pipe.trim()));
         }
     }
-    help() {
+    defaultCommand(defaultCommand) {
+        this._defaultCommand = defaultCommand;
+        return this;
+    }
+    header(header) {
+        this._header = header;
+        return this;
+    }
+    getCommandByName(cmd) {
+        return this.commands.find(i => i.name === cmd);
+    }
+    printGuide() {
         console.log(this._header);
         console.log();
         this.commands.forEach(i => {
@@ -90,9 +101,18 @@ class CLI {
             console.log();
         });
     }
-    header(header) {
-        this._header = header;
-        return this;
+    printCompactGuide() {
+        console.log(this._header);
+        console.log();
+        this.commands.forEach(i => {
+            console.log(i.name, chalk.grey(i.desc));
+            if (i.arguments.length) {
+                i.arguments.forEach(j => {
+                    console.log(`  --${j.name},-${j.abbr}`, chalk.grey(j.desc));
+                });
+            }
+        });
+        console.log();
     }
     squashArguments(cmd, args) {
         if (!cmd) return {};
@@ -104,9 +124,11 @@ class CLI {
     }
     start(argv = process.argv) {
         let args = this.extractArguments(argv);
-        let cmd = this.extractCommand(argv);
-        if (cmd) this.startPipeMode(cmd, this.squashArguments(cmd, args));
-        if (!cmd && args.i) this.startInteractiveMode();
+        let cmdString = this.extractCommand(argv);
+        let cmd = this.getCommandByName(cmdString);
+        if (cmd) return this.startPipeMode(cmd, this.squashArguments(cmd, args));
+        if (!cmd && args.i) return this.startInteractiveMode();
+        if (!cmd && this._defaultCommand) return this.startPipeMode(this.getCommandByName(this._defaultCommand), args);
     }
     startInteractiveMode() {
         const that = this;
@@ -124,7 +146,8 @@ class CLI {
             if (data === 'quit' || data === 'exit') rl.close();
             let argv = data.replace(/ +(?= )/g, '').split(' ').map(i => i.trim());
             let args = that.extractArguments(argv);
-            let cmd = that.extractCommand(argv);
+            let cmdString = that.extractCommand(argv);
+            let cmd = that.getCommandByName(cmdString);
             let mergedArguments = that.squashArguments(cmd, args);
             if (!cmd) return;
             cmd.callback(mergedArguments);
