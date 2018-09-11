@@ -18,8 +18,7 @@ cli
 // Use the automated help
 cli
     .command("help", "Prints help")
-    .callback(cli.help.bind(cli))
-
+    .callback(cli.printGuide.bind(cli));
 
 // Start
-cli.start();
+cli.defaultCommand('help').start();
