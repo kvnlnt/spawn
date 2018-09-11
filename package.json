@@ -1,7 +1,7 @@
 {
   "name": "@kvnlnt/spawn-cli",
   "author": "@kvnlnt",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "title": "Spawn CLI",
   "description": "The CLI for CLIs",
   "keywords": [

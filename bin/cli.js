@@ -1,8 +1,8 @@
 const chalk = require("chalk");
-const header = chalk.blue(`	
-    #### ##### ##### # # # ##  #
-  #### #####  ##### # # # # # #
-##### #      #   # ##### #  ##`);
+const header = chalk.blue(`
+----------------------------
+  Spawn
+----------------------------`);
 class CLI {
     constructor() {
         this.commands = [];
@@ -82,37 +82,25 @@ class CLI {
     printGuide() {
         console.log(this._header);
         console.log();
+        console.log(chalk.bold(`COMMANDS\n`));
         this.commands.forEach(i => {
-            console.log(chalk.bold(i.name));
-            console.log(chalk.grey(i.desc));
+            console.log('  ',chalk.bold(i.name),chalk.grey(i.desc));
             if (i.arguments.length) {
-                console.log();
                 i.arguments.forEach(j => {
-                    console.log(`  --${j.name},-${j.abbr}`, chalk.grey(j.desc));
-                });
-            }
-            if (i.examples.length) {
-                i.examples.forEach(j => {
-                    console.log();
-                    if (j.desc) console.log(chalk.grey(`  // ${j.desc}`));
-                    console.log(`  ${j.example}`);
+                    console.log(`     --${j.name},-${j.abbr}`, chalk.grey(j.desc));
                 });
             }
             console.log();
         });
-    }
-    printCompactGuide() {
-        console.log(this._header);
-        console.log();
         this.commands.forEach(i => {
-            console.log(i.name, chalk.grey(i.desc));
-            if (i.arguments.length) {
-                i.arguments.forEach(j => {
-                    console.log(`  --${j.name},-${j.abbr}`, chalk.grey(j.desc));
+            if (i.examples.length) {
+                console.log(chalk.bold(`EXAMPLES\n`));
+                i.examples.forEach(j => {
+                    console.log(`  ${j.example}`, chalk.grey(`${j.desc}`));
                 });
             }
+            console.log();
         });
-        console.log();
     }
     squashArguments(cmd, args) {
         if (!cmd) return {};

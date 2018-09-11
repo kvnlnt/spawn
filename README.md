@@ -15,23 +15,27 @@ The super simple cli lib I always wanted.
 ### Basic
 mycli.js
 
-    // include lib
-    const cli = require("spawn-cli");
+    const cli = require("@kvnlnt/spawn-cli");
 
-    // add a command with it's args
+    // Hello
     cli
-        .command("hello", "Prints hello")
-        .argument("name", "n", "Name")
-        .callback(resp => console.log('Hello', resp))
-        .example("hello --name=Fred, "Hello [Name]");
+        .command("Hello", "Prints hello")
+        .argument("output", "o", "Hello to")
+        .callback(resp => console.log('Hello,', resp.output))
+        .example("hello -o=World, "Prints; Hello World");
 
-    // start
-    cli.start();
+    // Use the automated help
+    cli
+        .command("help", "Prints help")
+        .callback(cli.printGuide.bind(cli));
+
+    // Start
+    cli.defaultCommand('help').start();
 
 
 Now set up your tool to be a cli with [npm link](https://docs.npmjs.com/cli/link) and you'll get something like this
 
-    $ mycli hello --name=You
+    $ mycli hello --output=You
     // result => Hello You
 
 ### Interactive Mode
