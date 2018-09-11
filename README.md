@@ -10,9 +10,6 @@ The super simple cli lib I always wanted.
 6. Simple, clean and get's out of your way
 
 ## Quick Start
-<a href="https://asciinema.org/a/mqQ6LisGGvF9p4EDzsz5BSlZw" target="_blank"><img src="https://asciinema.org/a/mqQ6LisGGvF9p4EDzsz5BSlZw.png" width="400"/></a>
-
-### Basic
 mycli.js
 
     const cli = require("@kvnlnt/spawn-cli");
