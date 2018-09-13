@@ -9,6 +9,7 @@ class CLI {
         this.lastCommand = null;
         this._header = header;
         this._defaultCommand = null;
+        this._themeColor = "blue";
     }
     argument(arg, abbr = null, desc = '', def = null) {
         this.lastCommand.arguments.push({
@@ -82,24 +83,26 @@ class CLI {
     printGuide() {
         console.log(this._header);
         console.log();
-        console.log(chalk.bold(`COMMANDS\n`));
+        console.log(chalk[this._themeColor](`COMMANDS\n`));
         this.commands.forEach(i => {
-            console.log('  ',chalk.bold(i.name),chalk.grey(i.desc));
+            console.log(chalk.bold(i.name));
+            console.log(chalk.grey(i.desc));
             if (i.arguments.length) {
                 i.arguments.forEach(j => {
-                    console.log(`     --${j.name},-${j.abbr}`, chalk.grey(j.desc));
+                    console.log(`--${j.name},-${j.abbr}`, chalk.grey(j.desc));
                 });
             }
             console.log();
         });
+        let hasExamples = this.commands.some(x => x.examples.length);
+        if (hasExamples) console.log(chalk[this._themeColor](`EXAMPLES\n`));
         this.commands.forEach(i => {
             if (i.examples.length) {
-                console.log(chalk.bold(`EXAMPLES\n`));
                 i.examples.forEach(j => {
-                    console.log(`  ${j.example}`, chalk.grey(`${j.desc}`));
+                    console.log(`${j.example}`);
+                    console.log(chalk.grey(`${j.desc}\n`));
                 });
             }
-            console.log();
         });
     }
     squashArguments(cmd, args) {
@@ -161,6 +164,9 @@ class CLI {
             if (pipe) args.pipe = pipe;
             return cmd.callback(args);
         });
+    }
+    themeColor(clr) {
+        this._themeColor = clr;
     }
 }
 module.exports = (new CLI());
