@@ -83,7 +83,7 @@ class CLI {
     printGuide() {
         console.log(this._header);
         console.log();
-        console.log(chalk[this._themeColor](`COMMANDS\n`));
+        console.log(chalk[this._themeColor](`Commands\n`));
         this.commands.forEach(i => {
             console.log(chalk.bold(i.name));
             console.log(chalk.grey(i.desc));
@@ -95,7 +95,7 @@ class CLI {
             console.log();
         });
         let hasExamples = this.commands.some(x => x.examples.length);
-        if (hasExamples) console.log(chalk[this._themeColor](`EXAMPLES\n`));
+        if (hasExamples) console.log(chalk[this._themeColor](`Examples\n`));
         this.commands.forEach(i => {
             if (i.examples.length) {
                 i.examples.forEach(j => {
