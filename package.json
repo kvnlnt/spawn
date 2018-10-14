@@ -1,8 +1,8 @@
 {
-  "name": "@kvnlnt/spawn-cli",
+  "name": "@kvnlnt/spawn",
   "author": "@kvnlnt",
-  "version": "1.0.9",
-  "title": "Spawn CLI",
+  "version": "1.0.0",
+  "title": "Spawn",
   "description": "The CLI for CLIs",
   "keywords": [
     "cli",
@@ -11,20 +11,29 @@
     "command-line-docs",
     "command-line-args"
   ],
-  "main": "./bin/cli.js",
+  "main": "./bin/spawn.js",
   "scripts": {
     "test": "jest"
   },
   "bin": {
-    "spawn-cli": "./bin/cli.js"
+    "spawn": "./spawn.js"
   },
   "preferGlobal": true,
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kvnlnt/spawn-cli.git"
+    "url": "git+https://github.com/kvnlnt/spawn.git"
   },
   "dependencies": {
     "chalk": "^2.3.2"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/kvnlnt/spawn/issues"
+  },
+  "homepage": "https://github.com/kvnlnt/spawn#readme",
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "devDependencies": {}
 }

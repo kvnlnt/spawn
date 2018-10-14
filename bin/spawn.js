@@ -1,9 +1,10 @@
 const chalk = require("chalk");
 const header = chalk.blue(`
 ----------------------------
-  Spawn
+  S P A W N
 ----------------------------`);
-class CLI {
+
+class Spawn {
   constructor() {
     this.commands = [];
     this.lastCommand = null;
@@ -11,15 +12,16 @@ class CLI {
     this._defaultCommand = null;
     this._themeColor = "blue";
   }
-  argument(arg, abbr = null, desc = "", def = null) {
-    this.lastCommand.arguments.push({
+  argument(arg, abbr = null, desc = "", def = null, cb = null, cmd = this.lastCommand) {
+    cmd.arguments.push({
       name: arg,
       abbr: abbr,
       def: def,
-      desc: desc
+      desc: desc,
+      cb: cb
     });
-    if (def) this.lastCommand.defaults[arg] = def;
-    if (def) this.lastCommand.defaults[abbr] = def;
+    if (def) cmd.defaults[arg] = def;
+    if (def) cmd.defaults[abbr] = def;
     return this;
   }
   command(cmd, desc) {
@@ -29,7 +31,8 @@ class CLI {
       arguments: [],
       examples: [],
       callback: null,
-      defaults: {}
+      defaults: {},
+      help: null
     };
     this.commands.push(newCommand);
     this.lastCommand = newCommand;
@@ -56,12 +59,7 @@ class CLI {
       }, {});
   }
   extractCommand(argv) {
-    return argv
-      .filter(
-        i =>
-          i.charAt(0) !== "-" && i.indexOf("\\") === -1 && i.indexOf("/") === -1
-      )
-      .pop();
+    return argv.filter(i => i.charAt(0) !== "-" && i.indexOf("\\") === -1 && i.indexOf("/") === -1).pop();
   }
   extractPipe(cb) {
     if (process.stdin.isTTY) {
@@ -83,49 +81,43 @@ class CLI {
   getCommandByName(cmd) {
     return this.commands.find(i => i.name === cmd);
   }
+  printCommandGuide(cmd = null) {
+    cmd = this.getCommandByName(cmd);
+    if (!cmd) return;
+    let padding = Math.max(...cmd.arguments.map(x => x.name.length)) + 2;
+    let dots = len => new Array(padding - len).fill(" ", 0, padding - len).join("");
+    console.log();
+    console.log(cmd.name);
+    console.log();
+    // arguments
+    if (cmd.arguments.length) {
+      cmd.arguments.forEach(j => {
+        console.log(
+          chalk[this._themeColor](`--${j.name},-${j.abbr}`),
+          chalk.grey(dots(j.name.length + j.abbr.length)),
+          chalk.grey(j.desc)
+        );
+      });
+    }
+    // examples
+    if (cmd.examples.length) {
+      console.log();
+      cmd.examples.forEach(j => {
+        console.log(`${j.example}`);
+        if (j.desc) console.log(chalk.grey(`\u21B3 ${j.desc}`));
+      });
+      console.log();
+    }
+  }
   printGuide() {
     console.log(this._header);
     console.log();
-    console.log(chalk[this._themeColor](`Commands`));
-
-    let longestCommand = Math.max(...this.commands.map(x => x.name.length));
-    let longestArgument = Math.max(
-      ...[].concat(
-        ...this.commands.map(x =>
-          x.arguments.map(xx => xx.name.length + xx.abbr.length + 3)
-        )
-      )
-    );
-    let padding = Math.max(...[longestCommand, longestArgument]) + 5;
-    let dots = len =>
-      new Array(padding - len).fill("-", 0, padding - len).join("");
+    let padding = Math.max(...this.commands.map(x => x.name.length)) + 2;
+    let dots = len => new Array(padding - len).fill(" ", 0, padding - len).join("");
     this.commands.forEach(i => {
-      console.log(
-        chalk.bold(i.name),
-        chalk.grey(dots(i.name.length)),
-        i.desc ? chalk.grey(i.desc) : ""
-      );
-      if (i.arguments.length) {
-        i.arguments.forEach(j => {
-          console.log(
-            `--${j.name},-${j.abbr}`,
-            chalk.grey(dots(j.name.length + j.abbr.length + 4)),
-            chalk.grey(j.desc)
-          );
-        });
-      }
-      //   console.log();
+      console.log(chalk[this._themeColor](i.name), chalk.grey(dots(i.name.length)), i.desc ? chalk.grey(i.desc) : "");
     });
-    let hasExamples = this.commands.some(x => x.examples.length);
-    if (hasExamples) console.log(chalk[this._themeColor](`\nExamples`));
-    this.commands.forEach(i => {
-      if (i.examples.length) {
-        i.examples.forEach(j => {
-          console.log(`${j.example}`);
-          if (j.desc) console.log(chalk.grey(`\u21B3 ${j.desc}`));
-        });
-      }
-    });
+    console.log();
   }
   squashArguments(cmd, args) {
     if (!cmd) return {};
@@ -141,11 +133,7 @@ class CLI {
     let cmd = this.getCommandByName(cmdString);
     if (cmd) return this.startPipeMode(cmd, this.squashArguments(cmd, args));
     if (!cmd && args.i) return this.startInteractiveMode();
-    if (!cmd && this._defaultCommand)
-      return this.startPipeMode(
-        this.getCommandByName(this._defaultCommand),
-        args
-      );
+    if (!cmd && this._defaultCommand) return this.startPipeMode(this.getCommandByName(this._defaultCommand), args);
   }
   startInteractiveMode() {
     const that = this;
@@ -198,4 +186,4 @@ class CLI {
     this._themeColor = clr;
   }
 }
-module.exports = new CLI();
+module.exports = new Spawn();

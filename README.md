@@ -1,7 +1,9 @@
 # Spawn CLI
+
 The super simple cli lib I always wanted.
 
 ## Features
+
 1. Create your own cli
 2. Auto generates manual
 3. Pipe Mode (Default)
@@ -10,9 +12,10 @@ The super simple cli lib I always wanted.
 6. Simple, clean and get's out of your way
 
 ## Quick Start
+
 mycli.js
 
-    const cli = require("@kvnlnt/spawn-cli");
+    const cli = require("@kvnlnt/spawn");
 
     // Hello
     cli
@@ -29,16 +32,17 @@ mycli.js
     // Start
     cli.defaultCommand('help').start();
 
-
 Now set up your tool to be a cli with [npm link](https://docs.npmjs.com/cli/link) and you'll get something like this
 
     $ mycli hello --output=You
     // result => Hello You
 
 ### Interactive Mode
+
 You can pass the `-i` flag without a command and use your tool interactively, like this:
 
     $ mycli -i
 
 ## Examples
+
 All examples are in the `./examples` folder.
