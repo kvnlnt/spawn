@@ -12,13 +12,12 @@ class Spawn {
     this._defaultCommand = null;
     this._themeColor = "blue";
   }
-  argument(arg, abbr = null, desc = "", def = null, cb = null, cmd = this.lastCommand) {
+  argument(arg, abbr = null, desc = "", def = null, cmd = this.lastCommand) {
     cmd.arguments.push({
       name: arg,
       abbr: abbr,
       def: def,
-      desc: desc,
-      cb: cb
+      desc: desc
     });
     if (def) cmd.defaults[arg] = def;
     if (def) cmd.defaults[abbr] = def;
@@ -39,7 +38,7 @@ class Spawn {
     return this;
   }
   callback(f) {
-    this.lastCommand.callback = f;
+    this.lastCommand.callback = f.bind(this);
     return this;
   }
   example(cmd, desc) {
@@ -119,6 +118,14 @@ class Spawn {
     });
     console.log();
   }
+  run(argv = process.argv) {
+    let args = this.extractArguments(argv);
+    let cmdString = this.extractCommand(argv);
+    let cmd = this.getCommandByName(cmdString);
+    if (cmd) return this.startPipeMode(cmd, this.squashArguments(cmd, args));
+    if (!cmd && args.i) return this.startInteractiveMode();
+    if (!cmd && this._defaultCommand) return this.startPipeMode(this.getCommandByName(this._defaultCommand), args);
+  }
   squashArguments(cmd, args) {
     if (!cmd) return {};
     let _args = cmd.arguments.reduce((acc, curr) => {
@@ -126,14 +133,6 @@ class Spawn {
       return acc;
     }, {});
     return _args;
-  }
-  start(argv = process.argv) {
-    let args = this.extractArguments(argv);
-    let cmdString = this.extractCommand(argv);
-    let cmd = this.getCommandByName(cmdString);
-    if (cmd) return this.startPipeMode(cmd, this.squashArguments(cmd, args));
-    if (!cmd && args.i) return this.startInteractiveMode();
-    if (!cmd && this._defaultCommand) return this.startPipeMode(this.getCommandByName(this._defaultCommand), args);
   }
   startInteractiveMode() {
     const that = this;

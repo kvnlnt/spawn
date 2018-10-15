@@ -17,4 +17,4 @@ cli.command("stdin", "inputs string").callback(req => {
 cli.command("help", "Prints help").callback(cli.printGuide.bind(cli));
 
 // Start
-cli.defaultCommand("help").start();
+cli.defaultCommand("help").run();

@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
 // YOUR APP
-const hello = resp => {
-  if (resp.help === true) return cli.printCommandGuide("hello");
+function hello(resp) {
+  if (resp.help === true) return this.printCommandGuide("hello");
   console.log("Hello,", resp.output);
-};
+}
 
-const goodbye = resp => {
-  if (resp.help === true) return cli.printCommandGuide("goodbye");
+function goodbye(resp) {
+  if (resp.help === true) return this.printCommandGuide("goodbye");
   console.log("Goodbye,", resp.output);
-};
+}
 
 // YOUR CLI
 const cli = require("../bin/spawn");
@@ -34,7 +34,7 @@ cli
   .example("goodbye -o=World!", "Prints Goodbye World!");
 
 // Use the automated guide
-cli.command("guide", "Prints guide").callback(cli.printGuide.bind(cli));
+cli.command("guide", "Prints guide").callback(cli.printGuide);
 
 // Start
-cli.defaultCommand("guide").start();
+cli.defaultCommand("guide").run();
