@@ -1,8 +1,3 @@
-&nbsp;&nbsp;&nbsp;⬤
-⬤&nbsp;⬤&nbsp;⬤
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⬤
-&nbsp;
-
 # Spawn
 
 The super simple cli lib I always wanted.
