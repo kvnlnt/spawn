@@ -1,3 +1,14 @@
+// Usage
+// -----
+// $ node interactive.js -i
+// type
+// $ help
+// outputs the guide
+// now try
+// stdout --test=testing
+// outputs
+// stdout { test: 'testing' }
+
 const cli = require("../bin/spawn");
 
 // Pipe Out
@@ -14,7 +25,7 @@ cli.command("stdin", "inputs string").callback(req => {
 });
 
 // Use the automated help
-cli.command("help", "Prints help").callback(cli.printGuide.bind(cli));
+cli.command("help", "Prints help").callback(cli.printGuide);
 
 // Start
 cli.defaultCommand("help").run();
