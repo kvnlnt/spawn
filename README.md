@@ -1,10 +1,14 @@
-<img src="spawn.svg" width="100" style="float:right;padding-left:50px;">
+<a href="https://badge.fury.io/js/%40kvnlnt%2Fspawn"><img src="https://badge.fury.io/js/%40kvnlnt%2Fspawn.svg" alt="npm version" height="18"></a>
 
-# Spawn
 
-The super simple cli lib I always wanted.
+<div style="text-align:center">
+<img src="spawn.svg" width="200">
+<h1 style="border:0;margin-bottom:0">Spawn</h1>
+<p style="opacity:0.5; font-size:18px">A CLI to create CLIs</p>
+</div>
 
-## Feature Highlights
+
+## Features
 
 1. Create your own cli
 2. Auto generates guide for cli and individual commands
