@@ -1,7 +1,7 @@
 {
   "name": "@kvnlnt/spawn",
   "author": "@kvnlnt",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "title": "Spawn",
   "description": "The CLI for CLIs",
   "keywords": [
@@ -16,7 +16,7 @@
     "test": "jest"
   },
   "bin": {
-    "spawn": "./spawn.js"
+    "spawn": "./bin/spawn.js"
   },
   "preferGlobal": true,
   "license": "MIT",

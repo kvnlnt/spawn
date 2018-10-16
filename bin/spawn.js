@@ -1,8 +1,8 @@
 const chalk = require("chalk");
-const header = chalk.blue(`
-----------------------------
-  S P A W N
-----------------------------`);
+const header = chalk.magenta(` 
+ ⬤ 
+⬤ ⬤ ⬤
+   ⬤`);
 
 class Spawn {
   constructor() {
@@ -10,7 +10,7 @@ class Spawn {
     this.lastCommand = null;
     this._header = header;
     this._defaultCommand = null;
-    this._themeColor = "blue";
+    this._themeColor = "magenta";
   }
   argument(arg, abbr = null, desc = "", def = null, cmd = this.lastCommand) {
     cmd.arguments.push({
@@ -139,7 +139,7 @@ class Spawn {
     let readline = require("readline");
     let rl = readline.createInterface(process.stdin, process.stdout);
     let prefix = "$ ";
-    rl.setPrompt(prefix, prefix.length);
+    rl.setPrompt(chalk[this._themeColor](prefix), prefix.length);
     rl.on("line", processLine);
     rl.on("close", close);
     let originalTTYwrite = rl._ttyWrite;
